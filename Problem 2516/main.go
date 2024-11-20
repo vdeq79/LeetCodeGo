@@ -21,9 +21,14 @@ func takeCharacters(s string, k int) int {
 	for l := 0; l < len(s); l++ {
 		count[s[l]-'a']--
 
-		for min(count[0], min(count[1], count[2])) < k {
+		for r <= l && count[s[l]-'a'] < k {
+			y := s[r]
 			count[s[r]-'a']++
 			r++
+
+			if s[l] == y {
+				break
+			}
 		}
 
 		res = min(res, len(s)-l+r-1)
