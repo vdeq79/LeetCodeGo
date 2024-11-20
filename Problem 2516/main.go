@@ -15,20 +15,20 @@ func takeCharacters(s string, k int) int {
 		return -1
 	}
 
-	// Sliding Window
-	res := len(s) + 1
-	l := 0
-	for r := 0; r < len(s); r++ {
-		count[s[r]-'a']--
-		fmt.Println(r, l, count)
+	res := len(s)
+	r := 0
+
+	for l := 0; l < len(s); l++ {
+		count[s[l]-'a']--
 
 		for min(count[0], min(count[1], count[2])) < k {
-			count[s[l]-'a']++
-			fmt.Println(r, l, count)
-			l++
+			count[s[r]-'a']++
+			r++
 		}
-		res = min(res, len(s)-(r-l+1))
+
+		res = min(res, len(s)-l+r-1)
 	}
+
 	return res
 }
 
