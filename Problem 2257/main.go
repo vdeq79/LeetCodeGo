@@ -6,56 +6,52 @@ import (
 
 func countUnguarded(m int, n int, guards [][]int, walls [][]int) int {
 	var total = m * n
-	matrix := make([][]int, m)
+	matrix := make([]byte, m*n)
 
-	for i := 0; i < m; i++ {
-		matrix[i] = make([]int, n)
-	}
-
-	for i := range walls {
-		matrix[walls[i][0]][walls[i][1]] = -1
+	for _, w := range walls {
+		matrix[w[0]*n+w[1]] = 1
 		total--
 	}
 
-	for i := range guards {
-		matrix[guards[i][0]][guards[i][1]] = -2
+	for _, g := range guards {
+		matrix[g[0]*n+g[1]] = 1
 		total--
 	}
 
-	for i := range guards {
+	for _, g := range guards {
 
-		for j := guards[i][0] - 1; j >= 0; j-- {
-			if matrix[j][guards[i][1]] == 0 {
-				matrix[j][guards[i][1]] = 1
+		for j := g[0] - 1; j >= 0; j-- {
+			if matrix[j*n+g[1]] == 0 {
+				matrix[j][g[1]] = 1
 				total--
-			} else if matrix[j][guards[i][1]] < 0 {
+			} else if matrix[j][g[1]] < 0 {
 				break
 			}
 		}
 
-		for j := guards[i][0] + 1; j < m; j++ {
-			if matrix[j][guards[i][1]] == 0 {
-				matrix[j][guards[i][1]] = 1
+		for j := g[0] + 1; j < m; j++ {
+			if matrix[j][g[1]] == 0 {
+				matrix[j][g[1]] = 1
 				total--
-			} else if matrix[j][guards[i][1]] < 0 {
+			} else if matrix[j][g[1]] < 0 {
 				break
 			}
 		}
 
-		for j := guards[i][1] - 1; j >= 0; j-- {
-			if matrix[guards[i][0]][j] == 0 {
-				matrix[guards[i][0]][j] = 1
+		for j := g[1] - 1; j >= 0; j-- {
+			if matrix[g[0]][j] == 0 {
+				matrix[g[0]][j] = 1
 				total--
-			} else if matrix[guards[i][0]][j] < 0 {
+			} else if matrix[g[0]][j] < 0 {
 				break
 			}
 		}
 
-		for j := guards[i][1] + 1; j < n; j++ {
-			if matrix[guards[i][0]][j] == 0 {
-				matrix[guards[i][0]][j] = 1
+		for j := g[1] + 1; j < n; j++ {
+			if matrix[g[0]][j] == 0 {
+				matrix[g[0]][j] = 1
 				total--
-			} else if matrix[guards[i][0]][j] < 0 {
+			} else if matrix[g[0]][j] < 0 {
 				break
 			}
 		}
