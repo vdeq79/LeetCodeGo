@@ -19,40 +19,34 @@ func countUnguarded(m int, n int, guards [][]int, walls [][]int) int {
 	}
 
 	for _, g := range guards {
+		row := g[0]
+		col := g[1]
 
-		for j := g[0] - 1; j >= 0; j-- {
-			if matrix[j*n+g[1]] == 0 {
-				matrix[j][g[1]] = 1
+		for r := row - 1; r >= 0 && matrix[r*n+col] != 1; r-- {
+			if matrix[r*n+col] == 0 {
+				matrix[r*n+col] = 2
 				total--
-			} else if matrix[j][g[1]] < 0 {
-				break
 			}
 		}
 
-		for j := g[0] + 1; j < m; j++ {
-			if matrix[j][g[1]] == 0 {
-				matrix[j][g[1]] = 1
+		for r := row + 1; r < m && matrix[r*n+col] != 1; r++ {
+			if matrix[r*n+col] == 0 {
+				matrix[r*n+col] = 2
 				total--
-			} else if matrix[j][g[1]] < 0 {
-				break
 			}
 		}
 
-		for j := g[1] - 1; j >= 0; j-- {
-			if matrix[g[0]][j] == 0 {
-				matrix[g[0]][j] = 1
+		for c := col - 1; c >= 0 && matrix[row*n+c] != 1; c-- {
+			if matrix[row*n+c] == 0 {
+				matrix[row*n+c] = 2
 				total--
-			} else if matrix[g[0]][j] < 0 {
-				break
 			}
 		}
 
-		for j := g[1] + 1; j < n; j++ {
-			if matrix[g[0]][j] == 0 {
-				matrix[g[0]][j] = 1
+		for c := col + 1; c < n && matrix[row*n+c] != 1; c++ {
+			if matrix[row*n+c] == 0 {
+				matrix[row*n+c] = 2
 				total--
-			} else if matrix[g[0]][j] < 0 {
-				break
 			}
 		}
 
