@@ -9,36 +9,28 @@ func min(a, b int) int {
 	return b
 }
 
-func find_min_dist(n int, adjList map[int][]int) int {
-	distList := make([]int, n)
-	distList[n-1] = 0
-
-	for i := n - 2; i >= 0; i-- {
-		min_dist := n - 1
-		for _, j := range adjList[i] {
-			min_dist = min(min_dist, distList[j]+1)
-		}
-
-		distList[i] = min_dist
-	}
-
-	return distList[0]
-}
-
 func shortestDistanceAfterQueries(n int, queries [][]int) []int {
 	result := make([]int, len(queries))
-	adjList := make(map[int][]int)
+	prev := make(map[int][]int)
+	distFromZero := make([]int, n)
 
-	for i := 0; i < n-1; i++ {
-		adjList[i] = append(adjList[i], i+1)
+	for i := 1; i < n; i++ {
+		prev[i] = append(prev[i], i-1)
+		distFromZero[i] = i
 	}
 
 	for i := 0; i < len(queries); i++ {
 		start := queries[i][0]
 		end := queries[i][1]
-		adjList[start] = append(adjList[start], end)
+		prev[end] = append(prev[end], start)
 
-		result[i] = find_min_dist(n, adjList)
+		for v := end; v < n; v++ {
+			for _, u := range prev[v] {
+				distFromZero[v] = min(distFromZero[v], distFromZero[u]+1)
+			}
+		}
+
+		result[i] = distFromZero[n-1]
 	}
 
 	return result
