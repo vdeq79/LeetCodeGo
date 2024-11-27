@@ -2,46 +2,45 @@ package main
 
 import "fmt"
 
-type Key struct {
-	X, Y int
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+func find_min_dist(n int, adjList map[int][]int) int {
+	distList := make([]int, n)
+	distList[n-1] = 0
+
+	for i := n - 2; i >= 0; i-- {
+		min_dist := n - 1
+		for _, j := range adjList[i] {
+			min_dist = min(min_dist, distList[j]+1)
+		}
+
+		distList[i] = min_dist
+	}
+
+	return distList[0]
 }
 
 func shortestDistanceAfterQueries(n int, queries [][]int) []int {
 	result := make([]int, len(queries))
-	countMap := make(map[Key]int)
+	adjList := make(map[int][]int)
 
-	for i := 0; i < n; i++ {
-		for j := i; j < n; j++ {
-			countMap[Key{i, j}] = j - i
-		}
+	for i := 0; i < n-1; i++ {
+		adjList[i] = append(adjList[i], i+1)
 	}
 
 	for i := 0; i < len(queries); i++ {
-		if countMap[Key{0, n - 1}] == 1 {
-			result[i] = 1
-		} else {
+		start := queries[i][0]
+		end := queries[i][1]
+		adjList[start] = append(adjList[start], end)
 
-			start := queries[i][0]
-			end := queries[i][1]
-			countMap[Key{start, end}] = 1
-
-			for j := 0; j <= start; j++ {
-				for k := end; k < n; k++ {
-					newValue := countMap[Key{j, start}] + 1 + countMap[Key{end, k}]
-
-					if newValue < countMap[Key{j, k}] {
-						countMap[Key{j, k}] = newValue
-					}
-				}
-
-			}
-
-			result[i] = countMap[Key{0, n - 1}]
-		}
-
+		result[i] = find_min_dist(n, adjList)
 	}
 
-	//fmt.Println(countMap)
 	return result
 }
 
